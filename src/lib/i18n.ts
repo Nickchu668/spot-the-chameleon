@@ -94,7 +94,7 @@ export const translations = {
     rule1: { zh: '在每一關中，找出顏色不同的方塊', en: 'Find the tile with a different color in each level' },
     rule2: { zh: '點擊正確方塊進入下一關', en: 'Click the correct tile to advance' },
     rule3: { zh: '每關最多可犯3次錯誤', en: 'Maximum 3 mistakes per level' },
-    rule4: { zh: '完成10關後可上傳分數', en: 'Complete all 10 levels to submit your score' },
+    rule4: { zh: '完成關卡後可上傳分數', en: 'Complete levels to submit your score' },
   },
 } as const;
 
