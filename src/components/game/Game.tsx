@@ -31,6 +31,7 @@ export function Game() {
   const [topThree, setTopThree] = useState<LeaderboardEntry[]>([]);
   const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(false);
   const [submittedName, setSubmittedName] = useState<string | null>(null);
+  const [playerRank, setPlayerRank] = useState<number | null>(null);
   
   // Achievement screen state
   const [showAchievement, setShowAchievement] = useState(false);
@@ -121,10 +122,31 @@ export function Game() {
   };
 
   // Submit score for game over (current level reached) and navigate to achievement screen
-  const handleGameOverSubmit = async (name: string) => {
+  const handleGameOverSubmit = async (name: string): Promise<number> => {
     // Submit the last successfully completed level (current - 1), not the failed level
     const completedLevel = Math.max(1, state.currentLevel - 1);
     await handleSubmitScore(name, completedLevel, state.mistakes);
+    
+    // Calculate player's rank
+    const { data: allScores } = await supabase
+      .from('leaderboard')
+      .select('*')
+      .order('level', { ascending: false })
+      .order('total_time_ms', { ascending: true })
+      .order('mistakes', { ascending: true });
+    
+    let rank = 1;
+    if (allScores) {
+      for (let i = 0; i < allScores.length; i++) {
+        const entry = allScores[i];
+        if (entry.name === name && entry.level === completedLevel && entry.total_time_ms === state.totalTimeMs) {
+          rank = i + 1;
+          break;
+        }
+      }
+    }
+    
+    setPlayerRank(rank);
     
     // Navigate to achievement screen
     setAchievementData({
@@ -133,6 +155,8 @@ export function Game() {
       totalTimeMs: state.totalTimeMs,
     });
     setShowAchievement(true);
+    
+    return rank;
   };
 
   // Submit score for victory (completed all 10 levels) and navigate to achievement screen
@@ -287,6 +311,7 @@ export function Game() {
           colorPair={state.colorPair}
           onMenu={goToMenu}
           onSubmitScore={handleGameOverSubmit}
+          playerRank={playerRank}
         />
       )}
 
