@@ -206,12 +206,13 @@ export function Game() {
         </>
       )}
 
-      {state.status === 'gameOver' && (
+      {state.status === 'gameOver' && state.colorPair && (
         <GameOverPopup
           level={state.currentLevel}
           language={language}
           totalTimeMs={state.totalTimeMs}
           variantIndex={state.variantIndex}
+          colorPair={state.colorPair}
           onMenu={goToMenu}
           onSubmitScore={handleSubmitScore}
         />
