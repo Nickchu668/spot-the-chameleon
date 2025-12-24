@@ -49,7 +49,7 @@ export function GameHeader({
 
       {/* Center section */}
       <div className="flex items-center gap-4 md:gap-6">
-        <LevelProgress currentLevel={currentLevel} />
+        <LevelProgress currentLevel={currentLevel} language={language} />
         <Timer timeMs={totalTimeMs} label={t('ui', 'time', language)} />
         {bestTimeMs && (
           <div className="hidden md:flex flex-col items-center">
