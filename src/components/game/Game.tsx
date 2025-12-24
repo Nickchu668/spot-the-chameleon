@@ -113,7 +113,9 @@ export function Game() {
 
   // Submit score for game over (current level reached)
   const handleGameOverSubmit = async (name: string) => {
-    await handleSubmitScore(name, state.currentLevel, state.mistakes);
+    // Submit the last successfully completed level (current - 1), not the failed level
+    const completedLevel = Math.max(1, state.currentLevel - 1);
+    await handleSubmitScore(name, completedLevel, state.mistakes);
   };
 
   // Submit score for victory (completed all 10 levels)
