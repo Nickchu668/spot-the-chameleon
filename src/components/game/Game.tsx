@@ -91,15 +91,15 @@ export function Game() {
     fetchLeaderboard();
   }, [fetchLeaderboard]);
 
-  // Submit score (only for victory)
-  const handleSubmitScore = async (name: string) => {
+  // Submit score (for game over or victory)
+  const handleSubmitScore = async (name: string, level?: number, mistakes?: number) => {
     const { error } = await supabase
       .from('leaderboard')
       .insert({
         name,
         total_time_ms: state.totalTimeMs,
-        level: 10, // Completed all 10 levels
-        mistakes: state.mistakes,
+        level: level ?? state.currentLevel,
+        mistakes: mistakes ?? state.mistakes,
       });
 
     if (error) {
@@ -109,6 +109,16 @@ export function Game() {
 
     setSubmittedName(name);
     fetchLeaderboard();
+  };
+
+  // Submit score for game over (current level reached)
+  const handleGameOverSubmit = async (name: string) => {
+    await handleSubmitScore(name, state.currentLevel, state.mistakes);
+  };
+
+  // Submit score for victory (completed all 10 levels)
+  const handleVictorySubmit = async (name: string) => {
+    await handleSubmitScore(name, 10, state.mistakes);
   };
 
   // Share functionality
@@ -167,7 +177,7 @@ export function Game() {
         <VictoryScreen
           totalTimeMs={state.totalTimeMs}
           language={language}
-          onSubmitScore={handleSubmitScore}
+          onSubmitScore={handleVictorySubmit}
           onRestart={restartGame}
           onShare={handleShare}
         />
@@ -223,9 +233,11 @@ export function Game() {
           level={state.currentLevel}
           language={language}
           totalTimeMs={state.totalTimeMs}
+          mistakes={state.mistakes}
           variantIndex={state.variantIndex}
           colorPair={state.colorPair}
           onMenu={goToMenu}
+          onSubmitScore={handleGameOverSubmit}
         />
       )}
 
