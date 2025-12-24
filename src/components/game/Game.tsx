@@ -160,8 +160,29 @@ export function Game() {
   };
 
   // Submit score for victory (completed all 10 levels) and navigate to achievement screen
-  const handleVictorySubmit = async (name: string) => {
+  const handleVictorySubmit = async (name: string): Promise<number> => {
     await handleSubmitScore(name, 10, state.mistakes);
+    
+    // Calculate player's rank
+    const { data: allScores } = await supabase
+      .from('leaderboard')
+      .select('*')
+      .order('level', { ascending: false })
+      .order('total_time_ms', { ascending: true })
+      .order('mistakes', { ascending: true });
+    
+    let rank = 1;
+    if (allScores) {
+      for (let i = 0; i < allScores.length; i++) {
+        const entry = allScores[i];
+        if (entry.name === name && entry.level === 10 && entry.total_time_ms === state.totalTimeMs) {
+          rank = i + 1;
+          break;
+        }
+      }
+    }
+    
+    setPlayerRank(rank);
     
     // Navigate to achievement screen
     setAchievementData({
@@ -170,6 +191,8 @@ export function Game() {
       totalTimeMs: state.totalTimeMs,
     });
     setShowAchievement(true);
+    
+    return rank;
   };
 
   // Share functionality
