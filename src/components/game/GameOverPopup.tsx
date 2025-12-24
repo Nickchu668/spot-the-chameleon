@@ -96,7 +96,7 @@ export function GameOverPopup({
           <p className="text-sm text-muted-foreground mb-1">
             {t('messages', 'correctAnswer', language)}
           </p>
-          <div className="flex justify-center transform scale-[0.6] origin-center -my-4">
+          <div className="flex justify-center transform scale-[0.5] origin-center -my-8">
             <GameGrid
               level={level}
               colorPair={colorPair}
