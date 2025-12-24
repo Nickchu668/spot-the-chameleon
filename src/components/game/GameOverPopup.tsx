@@ -109,26 +109,27 @@ export function GameOverPopup({
           </div>
         </div>
 
-        {/* Score display */}
-        <div className="bg-muted/50 rounded-2xl p-4 mb-6">
-          <p className="text-sm text-muted-foreground mb-1">
-            {t('messages', 'gameOverScore', language)}
-          </p>
-          <p className="text-3xl font-black font-mono text-primary">
-            {formatTime(totalTimeMs)}
-          </p>
-          
-          {/* Personal best comparison */}
-          {bestTimeMs !== null && (
-            <div className="mt-2 text-sm">
-              <span className="text-muted-foreground">
-                {language === 'zh' ? '個人最佳：' : 'Personal Best: '}
-              </span>
-              <span className="font-mono font-bold text-accent">
-                {formatTime(bestTimeMs)}
-              </span>
-            </div>
-          )}
+        {/* Score display - compact */}
+        <div className="bg-muted/50 rounded-2xl p-3 mb-4">
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-sm text-muted-foreground">
+              {t('messages', 'gameOverScore', language)}
+            </span>
+            <span className="text-xl font-black font-mono text-primary">
+              {formatTime(totalTimeMs)}
+            </span>
+            {bestTimeMs !== null && (
+              <>
+                <span className="text-muted-foreground">|</span>
+                <span className="text-sm text-muted-foreground">
+                  {language === 'zh' ? '最佳' : 'Best'}
+                </span>
+                <span className="font-mono font-bold text-accent">
+                  {formatTime(bestTimeMs)}
+                </span>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Score submission form */}
