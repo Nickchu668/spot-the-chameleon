@@ -151,7 +151,7 @@ export function StartMenu({
 
       {/* Rules */}
       <div 
-        className="glass-card rounded-2xl p-6 mt-6 max-w-md animate-fade-in-up"
+        className="glass-card rounded-2xl p-6 mt-6 max-w-md w-full animate-fade-in-up"
         style={{ animationDelay: '0.3s' }}
       >
         <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
