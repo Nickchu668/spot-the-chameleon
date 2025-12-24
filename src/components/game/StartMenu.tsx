@@ -7,6 +7,20 @@ import { cn } from '@/lib/utils';
 import { LeaderboardEntry } from './Leaderboard';
 import { formatTime } from './Timer';
 
+// Level images
+import LV1 from '@/assets/levels/LV1.jpeg';
+import LV2 from '@/assets/levels/LV2.jpeg';
+import LV3 from '@/assets/levels/LV3.jpeg';
+import LV4 from '@/assets/levels/LV4.jpeg';
+import LV5 from '@/assets/levels/LV5.jpeg';
+import LV6 from '@/assets/levels/LV6.jpeg';
+import LV7 from '@/assets/levels/LV7.jpeg';
+import LV8 from '@/assets/levels/LV8.jpeg';
+import LV9 from '@/assets/levels/LV9.jpeg';
+import LV10 from '@/assets/levels/LV10.jpeg';
+
+const LEVEL_IMAGES = [LV1, LV2, LV3, LV4, LV5, LV6, LV7, LV8, LV9, LV10];
+
 interface StartMenuProps {
   language: Language;
   onToggleLanguage: () => void;
@@ -149,10 +163,34 @@ export function StartMenu({
         </div>
       )}
 
+      {/* Level Preview */}
+      <div 
+        className="glass-card rounded-2xl p-4 sm:p-6 mt-6 max-w-md w-full animate-fade-in-up"
+        style={{ animationDelay: '0.3s' }}
+      >
+        <h2 className="text-lg font-bold mb-3 flex items-center gap-2">
+          🦎 {language === 'zh' ? '等級預覽' : 'Level Preview'}
+        </h2>
+        <div className="grid grid-cols-5 gap-2">
+          {LEVEL_IMAGES.map((img, index) => (
+            <div key={index} className="relative group">
+              <img 
+                src={img} 
+                alt={`Level ${index + 1}`}
+                className="w-full aspect-square object-cover rounded-lg border-2 border-primary/20 group-hover:border-primary/60 transition-all duration-200 group-hover:scale-105"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-background/80 text-center text-xs font-bold py-0.5 rounded-b-lg">
+                {index + 1}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Rules */}
       <div 
         className="glass-card rounded-2xl p-6 mt-6 max-w-md w-full animate-fade-in-up"
-        style={{ animationDelay: '0.3s' }}
+        style={{ animationDelay: '0.35s' }}
       >
         <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
           <Info className="h-5 w-5 text-primary" />
