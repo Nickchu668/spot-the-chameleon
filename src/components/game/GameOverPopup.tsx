@@ -92,11 +92,11 @@ export function GameOverPopup({
         </div>
 
         {/* Show correct answer on grid */}
-        <div className="mb-4">
-          <p className="text-sm text-muted-foreground mb-2">
+        <div className="mb-2">
+          <p className="text-sm text-muted-foreground mb-1">
             {t('messages', 'correctAnswer', language)}
           </p>
-          <div className="flex justify-center transform scale-75 origin-center">
+          <div className="flex justify-center transform scale-[0.6] origin-center -my-4">
             <GameGrid
               level={level}
               colorPair={colorPair}
