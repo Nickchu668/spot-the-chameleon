@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { Language, t, translations } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
-import { Home } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Home, Trophy, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatTime } from './Timer';
 import { GameGrid } from './GameGrid';
@@ -10,23 +12,45 @@ interface GameOverPopupProps {
   level: number;
   language: Language;
   totalTimeMs: number;
+  mistakes: number;
   variantIndex: number;
   colorPair: ColorPair;
   onMenu: () => void;
+  onSubmitScore: (name: string) => Promise<void>;
 }
 
 export function GameOverPopup({ 
   level, 
   language, 
   totalTimeMs,
+  mistakes,
   variantIndex,
   colorPair,
   onMenu,
+  onSubmitScore,
 }: GameOverPopupProps) {
+  const [name, setName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
   // Get rank title based on level reached
   const getRankTitle = (lvl: number): string => {
     const titles = translations.rankTitles[lvl as keyof typeof translations.rankTitles];
     return titles ? titles[language] : '';
+  };
+
+  const handleSubmit = async () => {
+    if (!name.trim() || isSubmitting) return;
+    
+    setIsSubmitting(true);
+    try {
+      await onSubmitScore(name.trim());
+      setSubmitted(true);
+    } catch (error) {
+      console.error('Error submitting score:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -86,12 +110,36 @@ export function GameOverPopup({
           </p>
         </div>
 
-        {/* Info about not being able to submit */}
-        <div className="mb-6 p-4 bg-muted/30 rounded-2xl text-muted-foreground text-sm">
-          {language === 'zh' 
-            ? '遊戲結束無法上傳排行榜，只有通關才能上榜！' 
-            : 'Game over - only completed games can be submitted to leaderboard!'}
-        </div>
+        {/* Score submission form */}
+        {!submitted ? (
+          <div className="mb-6 space-y-3">
+            <Input
+              type="text"
+              placeholder={language === 'zh' ? '輸入你的名字' : 'Enter your name'}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              maxLength={20}
+              className="text-center rounded-full"
+              onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+            />
+            <Button
+              onClick={handleSubmit}
+              disabled={!name.trim() || isSubmitting}
+              className="w-full rounded-full"
+            >
+              {isSubmitting ? (
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              ) : (
+                <Trophy className="mr-2 h-5 w-5" />
+              )}
+              {language === 'zh' ? '上傳排行榜' : 'Submit Score'}
+            </Button>
+          </div>
+        ) : (
+          <div className="mb-6 p-4 bg-primary/10 rounded-2xl text-primary text-sm">
+            {language === 'zh' ? '成績已上傳！' : 'Score submitted!'}
+          </div>
+        )}
 
         {/* Menu button */}
         <Button
