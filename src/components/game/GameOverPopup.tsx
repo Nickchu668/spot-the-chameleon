@@ -60,43 +60,43 @@ export function GameOverPopup({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm overflow-auto p-4">
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-background/80 backdrop-blur-sm overflow-auto py-2 px-3 sm:p-4 sm:items-center">
       <div className={cn(
-        "glass-card rounded-3xl p-8 max-w-md w-full text-center",
+        "glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 max-w-md w-full text-center my-auto",
         "animate-scale-in"
       )}>
         {/* Sad chameleon */}
-        <div className="text-6xl mb-4">
+        <div className="text-4xl sm:text-5xl mb-2 sm:mb-3">
           😢🦎
         </div>
 
-        <h2 className="text-3xl font-black text-destructive mb-2">
+        <h2 className="text-2xl sm:text-3xl font-black text-destructive mb-1 sm:mb-2">
           {t('messages', 'gameOver', language)}
         </h2>
 
-        <p className="text-muted-foreground mb-2">
+        <p className="text-sm text-muted-foreground mb-2">
           {t('messages', 'noMistakes', language)}
         </p>
 
         {/* Level reached and rank title */}
-        <div className="bg-muted/50 rounded-2xl p-4 mb-4">
-          <p className="text-sm text-muted-foreground mb-1">
+        <div className="bg-muted/50 rounded-xl sm:rounded-2xl p-2 sm:p-3 mb-2">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             {language === 'zh' ? '挑戰失敗於' : 'Failed at'} {t('ui', 'level', language)} {level}
           </p>
-          <p className="text-lg font-bold text-primary mt-2">
+          <p className="text-sm sm:text-base font-bold text-primary mt-1">
             {language === 'zh' ? '上傳成績：' : 'Submitted:'} {t('ui', 'level', language)} {completedLevel}
           </p>
-          <p className="text-xl font-bold text-accent">
+          <p className="text-base sm:text-lg font-bold text-accent">
             {getRankTitle(completedLevel)}
           </p>
         </div>
 
         {/* Show correct answer on grid */}
-        <div className="mb-2">
-          <p className="text-sm text-muted-foreground mb-1">
+        <div className="mb-1">
+          <p className="text-xs sm:text-sm text-muted-foreground mb-0.5">
             {t('messages', 'correctAnswer', language)}
           </p>
-          <div className="flex justify-center transform scale-[0.5] origin-center -my-8">
+          <div className="flex justify-center transform scale-[0.45] sm:scale-[0.5] origin-center -my-10 sm:-my-8">
             <GameGrid
               level={level}
               colorPair={colorPair}
@@ -110,21 +110,21 @@ export function GameOverPopup({
         </div>
 
         {/* Score display - compact */}
-        <div className="bg-muted/50 rounded-2xl p-3 mb-4">
-          <div className="flex items-center justify-center gap-2">
-            <span className="text-sm text-muted-foreground">
+        <div className="bg-muted/50 rounded-xl sm:rounded-2xl p-2 sm:p-3 mb-3">
+          <div className="flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
+            <span className="text-xs sm:text-sm text-muted-foreground">
               {t('messages', 'gameOverScore', language)}
             </span>
-            <span className="text-xl font-black font-mono text-primary">
+            <span className="text-lg sm:text-xl font-black font-mono text-primary">
               {formatTime(totalTimeMs)}
             </span>
             {bestTimeMs !== null && (
               <>
                 <span className="text-muted-foreground">|</span>
-                <span className="text-sm text-muted-foreground">
+                <span className="text-xs sm:text-sm text-muted-foreground">
                   {language === 'zh' ? '最佳' : 'Best'}
                 </span>
-                <span className="font-mono font-bold text-accent">
+                <span className="font-mono font-bold text-accent text-sm sm:text-base">
                   {formatTime(bestTimeMs)}
                 </span>
               </>
@@ -133,26 +133,26 @@ export function GameOverPopup({
         </div>
 
         {/* Score submission form */}
-        <div className="mb-6 space-y-3">
+        <div className="mb-3 sm:mb-4 space-y-2">
           <Input
             type="text"
             placeholder={language === 'zh' ? '輸入你的名字' : 'Enter your name'}
             value={name}
             onChange={(e) => setName(e.target.value)}
             maxLength={20}
-            className="text-center rounded-full"
+            className="text-center rounded-full h-9 sm:h-10 text-sm"
             onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
             disabled={submitted}
           />
           <Button
             onClick={handleSubmit}
             disabled={!name.trim() || isSubmitting || submitted}
-            className="w-full rounded-full"
+            className="w-full rounded-full h-9 sm:h-10 text-sm"
           >
             {isSubmitting ? (
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
-              <Trophy className="mr-2 h-5 w-5" />
+              <Trophy className="mr-2 h-4 w-4" />
             )}
             {language === 'zh' ? '上傳排行榜' : 'Submit Score'}
           </Button>
@@ -162,10 +162,10 @@ export function GameOverPopup({
         <Button
           onClick={onMenu}
           variant="outline"
-          size="lg"
-          className="w-full rounded-full"
+          size="default"
+          className="w-full rounded-full h-9 sm:h-10 text-sm"
         >
-          <Home className="mr-2 h-5 w-5" />
+          <Home className="mr-2 h-4 w-4" />
           {t('ui', 'menu', language)}
         </Button>
       </div>
