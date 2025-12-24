@@ -13,6 +13,7 @@ interface GameOverPopupProps {
   completedLevel: number;
   language: Language;
   totalTimeMs: number;
+  bestTimeMs: number | null;
   mistakes: number;
   variantIndex: number;
   colorPair: ColorPair;
@@ -25,6 +26,7 @@ export function GameOverPopup({
   completedLevel,
   language, 
   totalTimeMs,
+  bestTimeMs,
   mistakes,
   variantIndex,
   colorPair,
@@ -113,6 +115,18 @@ export function GameOverPopup({
           <p className="text-3xl font-black font-mono text-primary">
             {formatTime(totalTimeMs)}
           </p>
+          
+          {/* Personal best comparison */}
+          {bestTimeMs !== null && (
+            <div className="mt-2 text-sm">
+              <span className="text-muted-foreground">
+                {language === 'zh' ? '個人最佳：' : 'Personal Best: '}
+              </span>
+              <span className="font-mono font-bold text-accent">
+                {formatTime(bestTimeMs)}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Score submission form */}
