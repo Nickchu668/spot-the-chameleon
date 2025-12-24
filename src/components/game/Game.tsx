@@ -236,6 +236,7 @@ export function Game() {
           completedLevel={Math.max(1, state.currentLevel - 1)}
           language={language}
           totalTimeMs={state.totalTimeMs}
+          bestTimeMs={state.bestTimeMs}
           mistakes={state.mistakes}
           variantIndex={state.variantIndex}
           colorPair={state.colorPair}
