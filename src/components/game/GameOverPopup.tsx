@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { formatTime } from './Timer';
 import { GameGrid } from './GameGrid';
 import { ColorPair } from '@/lib/colorUtils';
+import { ShareableCard } from './ShareableCard';
 
 interface GameOverPopupProps {
   level: number;
@@ -34,6 +35,7 @@ export function GameOverPopup({
   onSubmitScore,
 }: GameOverPopupProps) {
   const [name, setName] = useState('');
+  const [submittedName, setSubmittedName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -49,6 +51,7 @@ export function GameOverPopup({
     setIsSubmitting(true);
     try {
       await onSubmitScore(name.trim());
+      setSubmittedName(name.trim());
       setSubmitted(true);
     } catch (error) {
       console.error('Error submitting score:', error);
@@ -155,8 +158,13 @@ export function GameOverPopup({
             </Button>
           </div>
         ) : (
-          <div className="mb-6 p-4 bg-primary/10 rounded-2xl text-primary text-sm">
-            {language === 'zh' ? '成績已上傳！' : 'Score submitted!'}
+          <div className="mb-6">
+            <ShareableCard
+              name={submittedName}
+              level={completedLevel}
+              totalTimeMs={totalTimeMs}
+              language={language}
+            />
           </div>
         )}
 
