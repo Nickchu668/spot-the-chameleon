@@ -67,16 +67,16 @@ export function AchievementScreen({ name, level, totalTimeMs, language, onMenu, 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-background via-background to-primary/10 overflow-auto p-4">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-start sm:justify-center bg-gradient-to-br from-background via-background to-primary/10 overflow-auto py-3 px-3 sm:p-4">
       <Confetti active={true} />
       
-      <div className="max-w-md w-full space-y-6 animate-scale-in">
+      <div className="max-w-md w-full space-y-3 sm:space-y-6 animate-scale-in my-auto">
         {/* Title */}
         <div className="text-center">
-          <h1 className="text-3xl font-black text-primary mb-2">
+          <h1 className="text-2xl sm:text-3xl font-black text-primary mb-1 sm:mb-2">
             {language === 'zh' ? '🎉 恭喜！' : '🎉 Congratulations!'}
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             {language === 'zh' ? '你的成績已上傳排行榜！' : 'Your score has been submitted!'}
           </p>
         </div>
@@ -84,7 +84,7 @@ export function AchievementScreen({ name, level, totalTimeMs, language, onMenu, 
         {/* Achievement Card */}
         <div
           className={cn(
-            "relative overflow-hidden rounded-2xl p-6",
+            "relative overflow-hidden rounded-xl sm:rounded-2xl p-4 sm:p-6",
             "bg-gradient-to-br from-primary/30 via-accent/20 to-secondary/30",
             "border-2 border-primary/40",
             "shadow-2xl"
@@ -92,67 +92,66 @@ export function AchievementScreen({ name, level, totalTimeMs, language, onMenu, 
           style={{ backgroundColor: 'hsl(var(--background))' }}
         >
           {/* Decorative elements */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-xl" />
-          <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-primary/5 rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 bg-primary/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-xl" />
+          <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 bg-accent/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 sm:w-48 h-32 sm:h-48 bg-primary/5 rounded-full blur-3xl" />
           
           {/* Content */}
-          <div className="relative z-10 text-center space-y-4">
+          <div className="relative z-10 text-center space-y-2 sm:space-y-4">
             {/* Logo / Icon */}
-            <div className="text-6xl mb-2">🦎✨</div>
+            <div className="text-4xl sm:text-6xl mb-1 sm:mb-2">🦎✨</div>
             
-            {/* Player name and rank */}
-            <h3 className="text-3xl font-black text-primary truncate px-2">
+            {/* Player name */}
+            <h3 className="text-2xl sm:text-3xl font-black text-primary truncate px-2">
               {name}
             </h3>
             
             {/* Leaderboard rank */}
             {playerRank && (
-              <div className="inline-block bg-accent/25 rounded-full px-4 py-1.5 border border-accent/30">
-                <span className="text-lg font-bold text-accent">
+              <div className="inline-block bg-accent/25 rounded-full px-3 sm:px-4 py-1 sm:py-1.5 border border-accent/30">
+                <span className="text-sm sm:text-lg font-bold text-accent">
                   🏆 {language === 'zh' ? `排行榜第 ${playerRank} 名` : `Rank #${playerRank}`}
                 </span>
               </div>
             )}
             
             {/* Achievement badge */}
-            <div className="inline-block bg-primary/25 rounded-full px-6 py-2 border border-primary/30">
-              <span className="text-lg font-bold text-primary">
+            <div className="inline-block bg-primary/25 rounded-full px-4 sm:px-6 py-1.5 sm:py-2 border border-primary/30">
+              <span className="text-base sm:text-lg font-bold text-primary">
                 {t('ui', 'level', language)} {level}
               </span>
             </div>
             
             {/* Rank title */}
-            <p className="text-2xl font-bold text-accent">
+            <p className="text-lg sm:text-2xl font-bold text-accent">
               {getRankTitle(level)}
             </p>
             
             {/* Time */}
-            <div className="bg-background/50 rounded-xl py-3 px-4 inline-block">
-              <p className="text-lg font-mono font-bold text-foreground">
+            <div className="bg-background/50 rounded-lg sm:rounded-xl py-2 sm:py-3 px-3 sm:px-4 inline-block">
+              <p className="text-base sm:text-lg font-mono font-bold text-foreground">
                 ⏱️ {formatTime(totalTimeMs)}
               </p>
             </div>
             
             {/* Game branding */}
-            <p className="text-sm text-muted-foreground pt-2">
+            <p className="text-xs sm:text-sm text-muted-foreground pt-1 sm:pt-2">
               {language === 'zh' ? '變色龍挑戰' : 'Chameleon Challenge'}
             </p>
           </div>
         </div>
 
-
         {/* Share buttons */}
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
           {/* Native share (mobile) */}
           {typeof navigator !== 'undefined' && navigator.share && (
             <Button
               onClick={handleNativeShare}
               variant="secondary"
-              size="lg"
-              className="rounded-full"
+              size="default"
+              className="rounded-full h-9 sm:h-10 text-sm"
             >
-              <Share2 className="mr-2 h-5 w-5" />
+              <Share2 className="mr-1.5 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
               {language === 'zh' ? '分享' : 'Share'}
             </Button>
           )}
@@ -161,10 +160,10 @@ export function AchievementScreen({ name, level, totalTimeMs, language, onMenu, 
           <Button
             onClick={handleShareTwitter}
             variant="outline"
-            size="lg"
-            className="rounded-full"
+            size="default"
+            className="rounded-full h-9 sm:h-10 text-sm"
           >
-            <Twitter className="mr-2 h-5 w-5" />
+            <Twitter className="mr-1.5 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
             X
           </Button>
 
@@ -172,10 +171,10 @@ export function AchievementScreen({ name, level, totalTimeMs, language, onMenu, 
           <Button
             onClick={handleShareFacebook}
             variant="outline"
-            size="lg"
-            className="rounded-full"
+            size="default"
+            className="rounded-full h-9 sm:h-10 text-sm"
           >
-            <Facebook className="mr-2 h-5 w-5" />
+            <Facebook className="mr-1.5 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
             FB
           </Button>
 
@@ -183,17 +182,17 @@ export function AchievementScreen({ name, level, totalTimeMs, language, onMenu, 
           <Button
             onClick={handleCopyLink}
             variant="outline"
-            size="lg"
-            className="rounded-full"
+            size="default"
+            className="rounded-full h-9 sm:h-10 text-sm"
           >
             {copied ? (
               <>
-                <Check className="mr-2 h-5 w-5 text-green-500" />
+                <Check className="mr-1.5 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5 text-green-500" />
                 {language === 'zh' ? '已複製' : 'Copied'}
               </>
             ) : (
               <>
-                <Link className="mr-2 h-5 w-5" />
+                <Link className="mr-1.5 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                 {language === 'zh' ? '複製' : 'Copy'}
               </>
             )}
@@ -204,10 +203,10 @@ export function AchievementScreen({ name, level, totalTimeMs, language, onMenu, 
         <Button
           onClick={onMenu}
           variant="ghost"
-          size="lg"
-          className="w-full rounded-full"
+          size="default"
+          className="w-full rounded-full h-9 sm:h-10 text-sm"
         >
-          <Home className="mr-2 h-5 w-5" />
+          <Home className="mr-1.5 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
           {t('ui', 'menu', language)}
         </Button>
       </div>
