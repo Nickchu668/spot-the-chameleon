@@ -237,6 +237,7 @@ export function Game() {
         totalTimeMs={achievementData.totalTimeMs}
         language={language}
         onMenu={handleAchievementClose}
+        playerRank={playerRank}
       />
     );
   }

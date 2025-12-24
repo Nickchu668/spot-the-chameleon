@@ -12,9 +12,10 @@ interface AchievementScreenProps {
   totalTimeMs: number;
   language: Language;
   onMenu: () => void;
+  playerRank: number | null;
 }
 
-export function AchievementScreen({ name, level, totalTimeMs, language, onMenu }: AchievementScreenProps) {
+export function AchievementScreen({ name, level, totalTimeMs, language, onMenu, playerRank }: AchievementScreenProps) {
   const [copied, setCopied] = useState(false);
 
   // Get rank title based on level
@@ -100,10 +101,19 @@ export function AchievementScreen({ name, level, totalTimeMs, language, onMenu }
             {/* Logo / Icon */}
             <div className="text-6xl mb-2">🦎✨</div>
             
-            {/* Player name */}
+            {/* Player name and rank */}
             <h3 className="text-3xl font-black text-primary truncate px-2">
               {name}
             </h3>
+            
+            {/* Leaderboard rank */}
+            {playerRank && (
+              <div className="inline-block bg-accent/25 rounded-full px-4 py-1.5 border border-accent/30">
+                <span className="text-lg font-bold text-accent">
+                  🏆 {language === 'zh' ? `排行榜第 ${playerRank} 名` : `Rank #${playerRank}`}
+                </span>
+              </div>
+            )}
             
             {/* Achievement badge */}
             <div className="inline-block bg-primary/25 rounded-full px-6 py-2 border border-primary/30">
