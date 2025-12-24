@@ -1,17 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Language, t, translations } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Home, Trophy, LogIn } from 'lucide-react';
+import { Home, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatTime } from './Timer';
 import { supabase } from '@/integrations/supabase/client';
+import { GameGrid } from './GameGrid';
+import { ColorPair } from '@/lib/colorUtils';
 
 interface GameOverPopupProps {
   level: number;
   language: Language;
   totalTimeMs: number;
   variantIndex: number;
+  colorPair: ColorPair;
   onMenu: () => void;
   onSubmitScore?: (name: string) => Promise<void>;
 }
@@ -21,6 +24,7 @@ export function GameOverPopup({
   language, 
   totalTimeMs,
   variantIndex,
+  colorPair,
   onMenu,
   onSubmitScore 
 }: GameOverPopupProps) {
@@ -28,6 +32,31 @@ export function GameOverPopup({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [googleUserName, setGoogleUserName] = useState<string | null>(null);
+
+  // Check for logged in user
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        // Get name from user metadata (Google provides this)
+        const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || '';
+        setGoogleUserName(name);
+        setNickname(name);
+      }
+    };
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        const name = session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0] || '';
+        setGoogleUserName(name);
+        setNickname(name);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   // Get rank title based on level reached
   const getRankTitle = (lvl: number): string => {
@@ -66,23 +95,6 @@ export function GameOverPopup({
     }
   };
 
-  const handleFacebookLogin = async () => {
-    setIsLoggingIn(true);
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'facebook',
-        options: {
-          redirectTo: `${window.location.origin}/`,
-        },
-      });
-      if (error) console.error('Facebook login error:', error);
-    } catch (error) {
-      console.error('Login error:', error);
-    } finally {
-      setIsLoggingIn(false);
-    }
-  };
-
   const defaultName = t('messages', 'mysteryPlayer', language);
 
   return (
@@ -114,14 +126,22 @@ export function GameOverPopup({
           </p>
         </div>
 
-        {/* Correct answer indicator */}
-        <div className="mb-4 p-3 bg-success/20 rounded-xl">
-          <p className="text-sm text-success font-medium mb-2">
+        {/* Show correct answer on grid */}
+        <div className="mb-4">
+          <p className="text-sm text-muted-foreground mb-2">
             {t('messages', 'correctAnswer', language)}
           </p>
-          <p className="text-lg font-bold text-success">
-            🎯 {language === 'zh' ? `第 ${variantIndex + 1} 格` : `Tile #${variantIndex + 1}`}
-          </p>
+          <div className="flex justify-center transform scale-75 origin-center">
+            <GameGrid
+              level={level}
+              colorPair={colorPair}
+              variantIndex={variantIndex}
+              onTileClick={() => {}}
+              successTile={variantIndex}
+              failTile={null}
+              clickedTiles={new Set()}
+            />
+          </div>
         </div>
 
         {/* Score display */}
@@ -158,17 +178,17 @@ export function GameOverPopup({
               </Button>
             </div>
 
-            {/* Social login options */}
-            <div className="border-t border-border pt-4">
-              <p className="text-xs text-muted-foreground mb-3">
-                {t('messages', 'orLoginWith', language)}
-              </p>
-              <div className="flex gap-2 justify-center">
+            {/* Google login option */}
+            {!googleUserName && (
+              <div className="border-t border-border pt-4">
+                <p className="text-xs text-muted-foreground mb-3">
+                  {t('messages', 'orLoginWith', language)}
+                </p>
                 <Button
                   onClick={handleGoogleLogin}
                   disabled={isLoggingIn}
                   variant="outline"
-                  className="rounded-full flex-1"
+                  className="rounded-full w-full"
                 >
                   <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -178,19 +198,8 @@ export function GameOverPopup({
                   </svg>
                   Google
                 </Button>
-                <Button
-                  onClick={handleFacebookLogin}
-                  disabled={isLoggingIn}
-                  variant="outline"
-                  className="rounded-full flex-1"
-                >
-                  <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                  </svg>
-                  Facebook
-                </Button>
               </div>
-            </div>
+            )}
           </div>
         ) : (
           <div className="mb-6 p-4 bg-success/20 rounded-2xl text-success">

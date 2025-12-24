@@ -70,16 +70,16 @@ export const translations = {
   
   // Rank titles based on level reached
   rankTitles: {
-    1: { zh: '色彩初心者', en: 'Color Novice' },
-    2: { zh: '辨色學徒', en: 'Color Apprentice' },
-    3: { zh: '色感見習生', en: 'Color Trainee' },
-    4: { zh: '彩虹追尋者', en: 'Rainbow Seeker' },
-    5: { zh: '光譜守護者', en: 'Spectrum Guardian' },
-    6: { zh: '色差探索家', en: 'Delta Explorer' },
-    7: { zh: '微調達人', en: 'Microtone Master' },
-    8: { zh: '色彩行者', en: 'Chroma Walker' },
-    9: { zh: '變色龍使者', en: 'Chameleon Messenger' },
-    10: { zh: '絕對色神', en: 'Absolute Chroma God' },
+    1: { zh: '色盲模式', en: 'Color Blind Mode' },
+    2: { zh: '初學探索', en: 'Beginner Explorer' },
+    3: { zh: '色彩新手', en: 'Color Novice' },
+    4: { zh: '眼尖學徒', en: 'Sharp-Eyed Apprentice' },
+    5: { zh: '色彩獵人', en: 'Color Hunter' },
+    6: { zh: '辨色專家', en: 'Color Expert' },
+    7: { zh: '色差忍者', en: 'Delta Ninja' },
+    8: { zh: '微調達人', en: 'Microtone Master' },
+    9: { zh: '色彩大師', en: 'Color Master' },
+    10: { zh: '傳奇色神', en: 'Legendary Chroma God' },
   },
   
   // Victory

@@ -1,8 +1,29 @@
-import { Language, t } from '@/lib/i18n';
+import { Language, t, translations } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import { formatTime } from './Timer';
 import { Trophy, X, Crown, Medal } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+// Get rank title based on time (faster = better title)
+const getLeaderboardTitle = (rank: number, language: Language): string => {
+  // Map leaderboard rank to a title
+  const titleMap: Record<number, keyof typeof translations.rankTitles> = {
+    1: 10, // 傳奇色神
+    2: 9,  // 色彩大師
+    3: 8,  // 微調達人
+    4: 7,  // 色差忍者
+    5: 6,  // 辨色專家
+    6: 5,  // 色彩獵人
+    7: 4,  // 眼尖學徒
+    8: 3,  // 色彩新手
+    9: 2,  // 初學探索
+    10: 1, // 色盲模式
+  };
+  
+  const titleLevel = titleMap[rank] || 1;
+  const titles = translations.rankTitles[titleLevel];
+  return titles ? titles[language] : '';
+};
 
 export interface LeaderboardEntry {
   id: string;
@@ -100,14 +121,19 @@ export function Leaderboard({
                       </div>
                     </td>
                     <td className="py-3 px-2">
-                      <span className={cn(
-                        "font-semibold",
-                        index === 0 && "text-yellow-400",
-                        index === 1 && "text-gray-300",
-                        index === 2 && "text-amber-600"
-                      )}>
-                        {entry.name}
-                      </span>
+                      <div className="flex flex-col">
+                        <span className={cn(
+                          "font-semibold",
+                          index === 0 && "text-yellow-400",
+                          index === 1 && "text-gray-300",
+                          index === 2 && "text-amber-600"
+                        )}>
+                          {entry.name}
+                        </span>
+                        <span className="text-xs text-accent">
+                          {getLeaderboardTitle(index + 1, language)}
+                        </span>
+                      </div>
                     </td>
                     <td className="py-3 px-2 text-right font-mono">
                       {formatTime(entry.total_time_ms)}
