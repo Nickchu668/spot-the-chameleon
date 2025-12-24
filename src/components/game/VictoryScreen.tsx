@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 interface VictoryScreenProps {
   totalTimeMs: number;
   language: Language;
-  onSubmitScore: (name: string) => Promise<void>;
+  onSubmitScore: (name: string) => Promise<number>;
   onRestart: () => void;
   onShare: () => void;
 }
@@ -25,13 +25,17 @@ export function VictoryScreen({
   const [nickname, setNickname] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [displayRank, setDisplayRank] = useState<number | null>(null);
+  const [submittedName, setSubmittedName] = useState('');
 
   const handleSubmit = async () => {
-    if (!nickname.trim()) return;
+    const nameToSubmit = nickname.trim() || defaultName;
     
     setIsSubmitting(true);
     try {
-      await onSubmitScore(nickname.trim());
+      const rank = await onSubmitScore(nameToSubmit);
+      setSubmittedName(nameToSubmit);
+      setDisplayRank(rank);
       setHasSubmitted(true);
     } catch (error) {
       console.error('Failed to submit score:', error);
@@ -74,7 +78,7 @@ export function VictoryScreen({
           </p>
         </div>
 
-        {/* Nickname input */}
+        {/* Nickname input or rank display */}
         {!hasSubmitted ? (
           <div className="mb-6">
             <p className="text-sm text-muted-foreground mb-3">
@@ -99,8 +103,16 @@ export function VictoryScreen({
             </div>
           </div>
         ) : (
-          <div className="mb-6 p-4 bg-success/20 rounded-2xl text-success">
-            ✓ {language === 'zh' ? '分數已提交！' : 'Score submitted!'}
+          <div className="mb-6 bg-primary/10 rounded-2xl p-4 animate-scale-in">
+            <p className="text-xs text-muted-foreground mb-1">
+              {language === 'zh' ? '你的排名' : 'Your Rank'}
+            </p>
+            <p className="text-3xl font-black text-primary">
+              #{displayRank}
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {submittedName}
+            </p>
           </div>
         )}
 
