@@ -12,7 +12,7 @@ export function ChameleonLogo({ className, animate = false }: ChameleonLogoProps
       animate && "chameleon-bounce",
       className
     )}>
-      <span className="text-5xl md:text-6xl" role="img" aria-label="Chameleon">
+      <span className="text-4xl md:text-5xl" role="img" aria-label="Chameleon">
         🦎
       </span>
       <div className="absolute -right-1 -top-1 w-3 h-3 rounded-full bg-primary animate-pulse" />
