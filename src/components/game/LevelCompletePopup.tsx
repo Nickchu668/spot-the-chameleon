@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Language, t } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
@@ -11,6 +12,22 @@ interface LevelCompletePopupProps {
 
 export function LevelCompletePopup({ level, language, onNext }: LevelCompletePopupProps) {
   const levelTitle = t('levelTitles', level, language);
+  const [countdown, setCountdown] = useState(5);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          onNext();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [onNext]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
@@ -33,8 +50,16 @@ export function LevelCompletePopup({ level, language, onNext }: LevelCompletePop
         </p>
 
         {/* Level badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 text-primary font-bold mb-6">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 text-primary font-bold mb-4">
           {t('ui', 'level', language)} {level} ✓
+        </div>
+
+        {/* Countdown */}
+        <div className="mb-6 text-center">
+          <div className="text-4xl font-black text-accent mb-2">{countdown}</div>
+          <p className="text-sm text-muted-foreground">
+            {countdown}{t('messages', 'autoNextIn', language)}
+          </p>
         </div>
 
         {/* Next level button */}

@@ -60,6 +60,26 @@ export const translations = {
     challengeMe: { zh: '挑戰我！🦎', en: 'Challenge Me! 🦎' },
     iCompleted: { zh: '我通關變色龍找不同！', en: 'I completed Spot the Chameleon!' },
     noMistakes: { zh: '沒有錯誤機會了！', en: 'No mistakes left!' },
+    autoNextIn: { zh: '秒後自動進入下一關', en: 's to next level' },
+    correctAnswer: { zh: '正確答案在這裡', en: 'Correct answer is here' },
+    gameOverScore: { zh: '你的成績', en: 'Your Score' },
+    submitToLeaderboard: { zh: '提交到龍虎榜', en: 'Submit to Leaderboard' },
+    loginToSubmit: { zh: '登入以提交成績', en: 'Login to submit score' },
+    orLoginWith: { zh: '或使用以下方式登入', en: 'Or login with' },
+  },
+  
+  // Rank titles based on level reached
+  rankTitles: {
+    1: { zh: '色彩初心者', en: 'Color Novice' },
+    2: { zh: '辨色學徒', en: 'Color Apprentice' },
+    3: { zh: '色感見習生', en: 'Color Trainee' },
+    4: { zh: '彩虹追尋者', en: 'Rainbow Seeker' },
+    5: { zh: '光譜守護者', en: 'Spectrum Guardian' },
+    6: { zh: '色差探索家', en: 'Delta Explorer' },
+    7: { zh: '微調達人', en: 'Microtone Master' },
+    8: { zh: '色彩行者', en: 'Chroma Walker' },
+    9: { zh: '變色龍使者', en: 'Chameleon Messenger' },
+    10: { zh: '絕對色神', en: 'Absolute Chroma God' },
   },
   
   // Victory
@@ -79,7 +99,7 @@ export const translations = {
 } as const;
 
 export function t(key: keyof typeof translations, lang: Language): string;
-export function t(section: 'levelTitles', level: number, lang: Language): string;
+export function t(section: 'levelTitles' | 'rankTitles', level: number, lang: Language): string;
 export function t(section: 'ui' | 'messages' | 'victory' | 'rules', key: string, lang: Language): string;
 export function t(...args: any[]): string {
   if (args.length === 2) {
@@ -93,9 +113,9 @@ export function t(...args: any[]): string {
   
   const [section, keyOrLevel, lang] = args;
   
-  if (section === 'levelTitles') {
+  if (section === 'levelTitles' || section === 'rankTitles') {
     const level = keyOrLevel as number;
-    const titles = translations.levelTitles[level as keyof typeof translations.levelTitles];
+    const titles = translations[section][level as keyof typeof translations.levelTitles];
     return titles ? titles[lang as Language] : '';
   }
   
