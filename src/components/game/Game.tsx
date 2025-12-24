@@ -10,6 +10,7 @@ import { VictoryScreen } from './VictoryScreen';
 import { AchievementScreen } from './AchievementScreen';
 import { Leaderboard, LeaderboardEntry } from './Leaderboard';
 import { Confetti } from './Confetti';
+import { AdBreakScreen } from './AdBreakScreen';
 import { supabase } from '@/integrations/supabase/client';
 import { formatTime } from './Timer';
 
@@ -40,6 +41,9 @@ export function Game() {
     level: number;
     totalTimeMs: number;
   } | null>(null);
+
+  // Ad break screen state (shown after level 5)
+  const [showAdBreak, setShowAdBreak] = useState(false);
 
   // Fetch leaderboard data - sorted by level desc, time asc, mistakes asc
   const fetchLeaderboard = useCallback(async () => {
@@ -312,15 +316,32 @@ export function Game() {
         />
       )}
 
-      {state.status === 'levelComplete' && (
+      {state.status === 'levelComplete' && !showAdBreak && (
         <>
           <Confetti active={true} />
           <LevelCompletePopup
             level={state.currentLevel}
             language={language}
-            onNext={nextLevel}
+            onNext={() => {
+              // Show ad break after completing level 5
+              if (state.currentLevel === 5) {
+                setShowAdBreak(true);
+              } else {
+                nextLevel();
+              }
+            }}
           />
         </>
+      )}
+
+      {showAdBreak && (
+        <AdBreakScreen
+          language={language}
+          onContinue={() => {
+            setShowAdBreak(false);
+            nextLevel();
+          }}
+        />
       )}
 
       {state.status === 'gameOver' && state.colorPair && (
