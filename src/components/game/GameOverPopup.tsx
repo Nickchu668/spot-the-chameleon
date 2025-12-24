@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils';
 import { formatTime } from './Timer';
 import { GameGrid } from './GameGrid';
 import { ColorPair } from '@/lib/colorUtils';
-import { ShareableCard } from './ShareableCard';
 
 interface GameOverPopupProps {
   level: number;
@@ -133,40 +132,30 @@ export function GameOverPopup({
         </div>
 
         {/* Score submission form */}
-        {!submitted ? (
-          <div className="mb-6 space-y-3">
-            <Input
-              type="text"
-              placeholder={language === 'zh' ? '輸入你的名字' : 'Enter your name'}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              maxLength={20}
-              className="text-center rounded-full"
-              onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-            />
-            <Button
-              onClick={handleSubmit}
-              disabled={!name.trim() || isSubmitting}
-              className="w-full rounded-full"
-            >
-              {isSubmitting ? (
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              ) : (
-                <Trophy className="mr-2 h-5 w-5" />
-              )}
-              {language === 'zh' ? '上傳排行榜' : 'Submit Score'}
-            </Button>
-          </div>
-        ) : (
-          <div className="mb-6">
-            <ShareableCard
-              name={submittedName}
-              level={completedLevel}
-              totalTimeMs={totalTimeMs}
-              language={language}
-            />
-          </div>
-        )}
+        <div className="mb-6 space-y-3">
+          <Input
+            type="text"
+            placeholder={language === 'zh' ? '輸入你的名字' : 'Enter your name'}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            maxLength={20}
+            className="text-center rounded-full"
+            onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+            disabled={submitted}
+          />
+          <Button
+            onClick={handleSubmit}
+            disabled={!name.trim() || isSubmitting || submitted}
+            className="w-full rounded-full"
+          >
+            {isSubmitting ? (
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            ) : (
+              <Trophy className="mr-2 h-5 w-5" />
+            )}
+            {language === 'zh' ? '上傳排行榜' : 'Submit Score'}
+          </Button>
+        </div>
 
         {/* Menu button */}
         <Button

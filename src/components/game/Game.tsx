@@ -7,6 +7,7 @@ import { GameScreen } from './GameScreen';
 import { LevelCompletePopup } from './LevelCompletePopup';
 import { GameOverPopup } from './GameOverPopup';
 import { VictoryScreen } from './VictoryScreen';
+import { AchievementScreen } from './AchievementScreen';
 import { Leaderboard, LeaderboardEntry } from './Leaderboard';
 import { Confetti } from './Confetti';
 import { supabase } from '@/integrations/supabase/client';
@@ -30,6 +31,14 @@ export function Game() {
   const [topThree, setTopThree] = useState<LeaderboardEntry[]>([]);
   const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(false);
   const [submittedName, setSubmittedName] = useState<string | null>(null);
+  
+  // Achievement screen state
+  const [showAchievement, setShowAchievement] = useState(false);
+  const [achievementData, setAchievementData] = useState<{
+    name: string;
+    level: number;
+    totalTimeMs: number;
+  } | null>(null);
 
   // Fetch leaderboard data - sorted by level desc, time asc, mistakes asc
   const fetchLeaderboard = useCallback(async () => {
@@ -111,16 +120,32 @@ export function Game() {
     fetchLeaderboard();
   };
 
-  // Submit score for game over (current level reached)
+  // Submit score for game over (current level reached) and navigate to achievement screen
   const handleGameOverSubmit = async (name: string) => {
     // Submit the last successfully completed level (current - 1), not the failed level
     const completedLevel = Math.max(1, state.currentLevel - 1);
     await handleSubmitScore(name, completedLevel, state.mistakes);
+    
+    // Navigate to achievement screen
+    setAchievementData({
+      name,
+      level: completedLevel,
+      totalTimeMs: state.totalTimeMs,
+    });
+    setShowAchievement(true);
   };
 
-  // Submit score for victory (completed all 10 levels)
+  // Submit score for victory (completed all 10 levels) and navigate to achievement screen
   const handleVictorySubmit = async (name: string) => {
     await handleSubmitScore(name, 10, state.mistakes);
+    
+    // Navigate to achievement screen
+    setAchievementData({
+      name,
+      level: 10,
+      totalTimeMs: state.totalTimeMs,
+    });
+    setShowAchievement(true);
   };
 
   // Share functionality
@@ -148,6 +173,26 @@ export function Game() {
     setShowLeaderboard(true);
     fetchLeaderboard();
   };
+
+  // Handle closing achievement screen and going to menu
+  const handleAchievementClose = () => {
+    setShowAchievement(false);
+    setAchievementData(null);
+    goToMenu();
+  };
+
+  // Show achievement screen if active
+  if (showAchievement && achievementData) {
+    return (
+      <AchievementScreen
+        name={achievementData.name}
+        level={achievementData.level}
+        totalTimeMs={achievementData.totalTimeMs}
+        language={language}
+        onMenu={handleAchievementClose}
+      />
+    );
+  }
 
   // Render based on game status
   if (state.status === 'menu') {
