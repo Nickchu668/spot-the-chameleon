@@ -10,6 +10,7 @@ import { ColorPair } from '@/lib/colorUtils';
 
 interface GameOverPopupProps {
   level: number;
+  completedLevel: number;
   language: Language;
   totalTimeMs: number;
   mistakes: number;
@@ -21,6 +22,7 @@ interface GameOverPopupProps {
 
 export function GameOverPopup({ 
   level, 
+  completedLevel,
   language, 
   totalTimeMs,
   mistakes,
@@ -75,10 +77,13 @@ export function GameOverPopup({
         {/* Level reached and rank title */}
         <div className="bg-muted/50 rounded-2xl p-4 mb-4">
           <p className="text-sm text-muted-foreground mb-1">
-            {t('ui', 'level', language)} {level}
+            {language === 'zh' ? '挑戰失敗於' : 'Failed at'} {t('ui', 'level', language)} {level}
+          </p>
+          <p className="text-lg font-bold text-primary mt-2">
+            {language === 'zh' ? '上傳成績：' : 'Submitted:'} {t('ui', 'level', language)} {completedLevel}
           </p>
           <p className="text-xl font-bold text-accent">
-            {getRankTitle(level)}
+            {getRankTitle(completedLevel)}
           </p>
         </div>
 

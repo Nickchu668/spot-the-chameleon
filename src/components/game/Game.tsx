@@ -233,6 +233,7 @@ export function Game() {
       {state.status === 'gameOver' && state.colorPair && (
         <GameOverPopup
           level={state.currentLevel}
+          completedLevel={Math.max(1, state.currentLevel - 1)}
           language={language}
           totalTimeMs={state.totalTimeMs}
           mistakes={state.mistakes}
