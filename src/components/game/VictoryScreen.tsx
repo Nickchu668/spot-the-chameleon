@@ -7,6 +7,9 @@ import { Confetti } from './Confetti';
 import { Trophy, Share2, Download, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+// Level 10 image for victory
+import LV10 from '@/assets/levels/LV10.jpeg';
+
 interface VictoryScreenProps {
   totalTimeMs: number;
   language: Language;
@@ -54,9 +57,16 @@ export function VictoryScreen({
         "glass-card rounded-3xl p-8 max-w-md w-full text-center",
         "animate-scale-in"
       )}>
-        {/* Crown chameleon */}
-        <div className="text-7xl mb-4 float-animation">
-          👑🦎
+        {/* Crown chameleon - Level 10 image */}
+        <div className="mb-4">
+          <div className="relative inline-block">
+            <img 
+              src={LV10} 
+              alt="Level 10 Chameleon"
+              className="w-24 h-24 object-cover rounded-2xl shadow-lg border-2 border-primary/40 mx-auto"
+            />
+            <span className="absolute -top-3 -right-3 text-3xl">👑</span>
+          </div>
         </div>
 
         {/* Victory message */}

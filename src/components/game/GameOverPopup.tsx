@@ -8,6 +8,31 @@ import { formatTime } from './Timer';
 import { GameGrid } from './GameGrid';
 import { ColorPair } from '@/lib/colorUtils';
 
+// Level images
+import LV1 from '@/assets/levels/LV1.jpeg';
+import LV2 from '@/assets/levels/LV2.jpeg';
+import LV3 from '@/assets/levels/LV3.jpeg';
+import LV4 from '@/assets/levels/LV4.jpeg';
+import LV5 from '@/assets/levels/LV5.jpeg';
+import LV6 from '@/assets/levels/LV6.jpeg';
+import LV7 from '@/assets/levels/LV7.jpeg';
+import LV8 from '@/assets/levels/LV8.jpeg';
+import LV9 from '@/assets/levels/LV9.jpeg';
+import LV10 from '@/assets/levels/LV10.jpeg';
+
+const LEVEL_IMAGES: Record<number, string> = {
+  1: LV1,
+  2: LV2,
+  3: LV3,
+  4: LV4,
+  5: LV5,
+  6: LV6,
+  7: LV7,
+  8: LV8,
+  9: LV9,
+  10: LV10,
+};
+
 interface GameOverPopupProps {
   level: number;
   completedLevel: number;
@@ -69,9 +94,13 @@ export function GameOverPopup({
         "glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 max-w-md w-full text-center my-auto",
         "animate-scale-in"
       )}>
-        {/* Sad chameleon */}
-        <div className="text-4xl sm:text-5xl mb-2 sm:mb-3">
-          😢🦎
+        {/* Level image */}
+        <div className="mb-2 sm:mb-3">
+          <img 
+            src={LEVEL_IMAGES[completedLevel] || LV1} 
+            alt={`Level ${completedLevel} Chameleon`}
+            className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl shadow-lg border-2 border-destructive/30 mx-auto"
+          />
         </div>
 
         <h2 className="text-2xl sm:text-3xl font-black text-destructive mb-1 sm:mb-2">
