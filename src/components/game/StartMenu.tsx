@@ -1,9 +1,11 @@
-import { Language, t } from '@/lib/i18n';
+import { Language, t, translations } from '@/lib/i18n';
 import { ChameleonLogo } from './ChameleonLogo';
 import { LanguageToggle } from './LanguageToggle';
 import { Button } from '@/components/ui/button';
-import { Play, Trophy, Info } from 'lucide-react';
+import { Play, Trophy, Info, Crown, Medal } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { LeaderboardEntry } from './Leaderboard';
+import { formatTime } from './Timer';
 
 interface StartMenuProps {
   language: Language;
@@ -11,7 +13,18 @@ interface StartMenuProps {
   onStart: () => void;
   onLeaderboard: () => void;
   bestTimeMs: number | null;
+  topThree: LeaderboardEntry[];
 }
+
+// Get rank title based on leaderboard position
+const getLeaderboardTitle = (rank: number, language: Language): string => {
+  const titleMap: Record<number, keyof typeof translations.rankTitles> = {
+    1: 10, 2: 9, 3: 8,
+  };
+  const titleLevel = titleMap[rank] || 1;
+  const titles = translations.rankTitles[titleLevel];
+  return titles ? titles[language] : '';
+};
 
 export function StartMenu({
   language,
@@ -19,7 +32,21 @@ export function StartMenu({
   onStart,
   onLeaderboard,
   bestTimeMs,
+  topThree,
 }: StartMenuProps) {
+  const getRankIcon = (rank: number) => {
+    switch (rank) {
+      case 1:
+        return <Crown className="h-5 w-5 text-yellow-400" />;
+      case 2:
+        return <Medal className="h-5 w-5 text-gray-300" />;
+      case 3:
+        return <Medal className="h-5 w-5 text-amber-600" />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="min-h-screen gradient-bg flex flex-col items-center justify-center p-4">
       {/* Language toggle */}
@@ -71,9 +98,60 @@ export function StartMenu({
         </Button>
       </div>
 
+      {/* TOP 3 Leaderboard */}
+      {topThree.length > 0 && (
+        <div 
+          className="glass-card rounded-2xl p-6 mt-6 max-w-md w-full animate-fade-in-up"
+          style={{ animationDelay: '0.25s' }}
+        >
+          <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+            <Trophy className="h-5 w-5 text-accent" />
+            TOP 3
+          </h2>
+          <div className="space-y-3">
+            {topThree.map((entry, index) => (
+              <div
+                key={entry.id}
+                className={cn(
+                  "flex items-center gap-3 p-3 rounded-xl",
+                  index === 0 && "bg-yellow-500/10",
+                  index === 1 && "bg-gray-400/10",
+                  index === 2 && "bg-amber-600/10"
+                )}
+              >
+                <div className="w-8 h-8 flex items-center justify-center">
+                  {getRankIcon(index + 1)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className={cn(
+                    "font-semibold truncate",
+                    index === 0 && "text-yellow-400",
+                    index === 1 && "text-gray-300",
+                    index === 2 && "text-amber-600"
+                  )}>
+                    {entry.name}
+                  </div>
+                  <div className="text-xs text-accent">
+                    {getLeaderboardTitle(index + 1, language)}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm font-mono">
+                    {formatTime(entry.total_time_ms)}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Lv.{(entry as any).level || 10}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Rules */}
       <div 
-        className="glass-card rounded-2xl p-6 mt-8 max-w-md animate-fade-in-up"
+        className="glass-card rounded-2xl p-6 mt-6 max-w-md animate-fade-in-up"
         style={{ animationDelay: '0.3s' }}
       >
         <h2 className="text-lg font-bold mb-4 flex items-center gap-2">

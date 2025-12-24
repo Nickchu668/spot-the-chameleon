@@ -30,6 +30,8 @@ export interface LeaderboardEntry {
   name: string;
   total_time_ms: number;
   completed_at: string;
+  level: number;
+  mistakes: number;
 }
 
 interface LeaderboardProps {
@@ -102,6 +104,7 @@ export function Leaderboard({
                 <tr className="text-left text-sm text-muted-foreground border-b border-border">
                   <th className="py-3 px-2">{t('ui', 'rank', language)}</th>
                   <th className="py-3 px-2">{t('ui', 'name', language)}</th>
+                  <th className="py-3 px-2 text-center">{language === 'zh' ? '關卡' : 'Level'}</th>
                   <th className="py-3 px-2 text-right">{t('ui', 'time', language)}</th>
                   <th className="py-3 px-2 text-right hidden sm:table-cell">{t('ui', 'date', language)}</th>
                 </tr>
@@ -134,6 +137,11 @@ export function Leaderboard({
                           {getLeaderboardTitle(index + 1, language)}
                         </span>
                       </div>
+                    </td>
+                    <td className="py-3 px-2 text-center">
+                      <span className="text-sm font-medium text-primary">
+                        Lv.{entry.level}
+                      </span>
                     </td>
                     <td className="py-3 px-2 text-right font-mono">
                       {formatTime(entry.total_time_ms)}

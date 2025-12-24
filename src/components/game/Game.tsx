@@ -27,17 +27,20 @@ export function Game() {
 
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [leaderboardEntries, setLeaderboardEntries] = useState<LeaderboardEntry[]>([]);
+  const [topThree, setTopThree] = useState<LeaderboardEntry[]>([]);
   const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(false);
   const [submittedName, setSubmittedName] = useState<string | null>(null);
 
-  // Fetch leaderboard data
+  // Fetch leaderboard data - sorted by level desc, time asc, mistakes asc
   const fetchLeaderboard = useCallback(async () => {
     setIsLoadingLeaderboard(true);
     try {
       const { data, error } = await supabase
         .from('leaderboard')
         .select('*')
+        .order('level', { ascending: false })
         .order('total_time_ms', { ascending: true })
+        .order('mistakes', { ascending: true })
         .limit(10);
 
       if (error) {
@@ -46,6 +49,7 @@ export function Game() {
       }
 
       setLeaderboardEntries(data || []);
+      setTopThree((data || []).slice(0, 3));
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
     } finally {
@@ -82,13 +86,20 @@ export function Game() {
     }
   }, [showLeaderboard, fetchLeaderboard]);
 
-  // Submit score
+  // Fetch top 3 on mount
+  useEffect(() => {
+    fetchLeaderboard();
+  }, [fetchLeaderboard]);
+
+  // Submit score (only for victory)
   const handleSubmitScore = async (name: string) => {
     const { error } = await supabase
       .from('leaderboard')
       .insert({
         name,
         total_time_ms: state.totalTimeMs,
+        level: 10, // Completed all 10 levels
+        mistakes: state.mistakes,
       });
 
     if (error) {
@@ -136,6 +147,7 @@ export function Game() {
           onStart={startGame}
           onLeaderboard={handleOpenLeaderboard}
           bestTimeMs={state.bestTimeMs}
+          topThree={topThree}
         />
         {showLeaderboard && (
           <Leaderboard
@@ -214,7 +226,6 @@ export function Game() {
           variantIndex={state.variantIndex}
           colorPair={state.colorPair}
           onMenu={goToMenu}
-          onSubmitScore={handleSubmitScore}
         />
       )}
 

@@ -19,6 +19,8 @@ export type Database = {
           completed_at: string | null
           created_at: string | null
           id: string
+          level: number
+          mistakes: number
           name: string
           total_time_ms: number
         }
@@ -26,6 +28,8 @@ export type Database = {
           completed_at?: string | null
           created_at?: string | null
           id?: string
+          level?: number
+          mistakes?: number
           name: string
           total_time_ms: number
         }
@@ -33,6 +37,8 @@ export type Database = {
           completed_at?: string | null
           created_at?: string | null
           id?: string
+          level?: number
+          mistakes?: number
           name?: string
           total_time_ms?: number
         }
