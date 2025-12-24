@@ -210,8 +210,10 @@ export function Game() {
         <GameOverPopup
           level={state.currentLevel}
           language={language}
-          onRetry={restartLevel}
+          totalTimeMs={state.totalTimeMs}
+          variantIndex={state.variantIndex}
           onMenu={goToMenu}
+          onSubmitScore={handleSubmitScore}
         />
       )}
 
