@@ -1,11 +1,10 @@
 import { Language, t, translations } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
-import { Download, Twitter, Facebook, Link, Check, Home, Share2 } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { Twitter, Facebook, Link, Check, Home, Share2 } from 'lucide-react';
+import { useState } from 'react';
 import { formatTime } from './Timer';
 import { cn } from '@/lib/utils';
 import { Confetti } from './Confetti';
-import html2canvas from 'html2canvas';
 
 interface AchievementScreenProps {
   name: string;
@@ -17,8 +16,6 @@ interface AchievementScreenProps {
 
 export function AchievementScreen({ name, level, totalTimeMs, language, onMenu }: AchievementScreenProps) {
   const [copied, setCopied] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
 
   // Get rank title based on level
   const getRankTitle = (lvl: number): string => {
@@ -31,27 +28,6 @@ export function AchievementScreen({ name, level, totalTimeMs, language, onMenu }
     ? `🦎 我在變色龍挑戰中達到了 ${t('ui', 'level', language)} ${level}！我的稱號是「${getRankTitle(level)}」，用時 ${formatTime(totalTimeMs)}。你能超越我嗎？`
     : `🦎 I reached Level ${level} in the Chameleon Challenge! My rank: "${getRankTitle(level)}" in ${formatTime(totalTimeMs)}. Can you beat me?`;
 
-  const handleDownloadImage = async () => {
-    if (!cardRef.current || isDownloading) return;
-    
-    setIsDownloading(true);
-    try {
-      const canvas = await html2canvas(cardRef.current, {
-        backgroundColor: null,
-        scale: 2,
-        useCORS: true,
-      });
-      
-      const link = document.createElement('a');
-      link.download = `chameleon-challenge-${name}-level${level}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    } catch (error) {
-      console.error('Failed to download image:', error);
-    } finally {
-      setIsDownloading(false);
-    }
-  };
 
   const handleCopyLink = async () => {
     try {
@@ -104,9 +80,8 @@ export function AchievementScreen({ name, level, totalTimeMs, language, onMenu }
           </p>
         </div>
 
-        {/* Achievement Card - This is what gets captured as image */}
-        <div 
-          ref={cardRef}
+        {/* Achievement Card */}
+        <div
           className={cn(
             "relative overflow-hidden rounded-2xl p-6",
             "bg-gradient-to-br from-primary/30 via-accent/20 to-secondary/30",
@@ -156,19 +131,6 @@ export function AchievementScreen({ name, level, totalTimeMs, language, onMenu }
           </div>
         </div>
 
-        {/* Download Button */}
-        <Button
-          onClick={handleDownloadImage}
-          disabled={isDownloading}
-          size="lg"
-          className="w-full rounded-full text-lg py-6"
-        >
-          <Download className="mr-2 h-5 w-5" />
-          {isDownloading 
-            ? (language === 'zh' ? '生成中...' : 'Generating...') 
-            : (language === 'zh' ? '下載成績圖片' : 'Download Achievement Image')
-          }
-        </Button>
 
         {/* Share buttons */}
         <div className="flex flex-wrap justify-center gap-3">
