@@ -59,7 +59,7 @@ export function GameScreen({
       />
 
       {/* Main game area */}
-      <main className="flex-1 flex flex-col items-center justify-center pt-20 pb-8 px-4">
+      <main className="flex-1 flex flex-col items-center justify-center pt-32 pb-8 px-4">
         {/* Level title */}
         <div className="mb-6 text-center animate-fade-in-up">
           <h2 className="text-2xl md:text-3xl font-black gradient-text mb-2">
