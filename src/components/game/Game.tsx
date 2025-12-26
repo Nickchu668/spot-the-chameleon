@@ -233,15 +233,25 @@ export function Game() {
   // Show achievement screen if active
   if (showAchievement && achievementData) {
     return (
-      <AchievementScreen
-        name={achievementData.name}
-        level={achievementData.level}
-        totalTimeMs={achievementData.totalTimeMs}
-        language={language}
-        onMenu={handleAchievementClose}
-        onLeaderboard={handleOpenLeaderboard}
-        playerRank={playerRank}
-      />
+      <>
+        <AchievementScreen
+          name={achievementData.name}
+          level={achievementData.level}
+          totalTimeMs={achievementData.totalTimeMs}
+          language={language}
+          onMenu={handleAchievementClose}
+          onLeaderboard={handleOpenLeaderboard}
+          playerRank={playerRank}
+        />
+        {showLeaderboard && (
+          <Leaderboard
+            entries={leaderboardEntries}
+            language={language}
+            onClose={() => setShowLeaderboard(false)}
+            isLoading={isLoadingLeaderboard}
+          />
+        )}
+      </>
     );
   }
 
