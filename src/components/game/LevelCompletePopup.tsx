@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Language, t } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Trophy } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface LevelCompletePopupProps {
   level: number;
   language: Language;
   onNext: () => void;
-  onLeaderboard: () => void;
 }
 
-export function LevelCompletePopup({ level, language, onNext, onLeaderboard }: LevelCompletePopupProps) {
+export function LevelCompletePopup({ level, language, onNext }: LevelCompletePopupProps) {
   const levelTitle = t('levelTitles', level, language);
   const [countdown, setCountdown] = useState(5);
 
@@ -63,30 +62,19 @@ export function LevelCompletePopup({ level, language, onNext, onLeaderboard }: L
           </p>
         </div>
 
-        {/* Buttons */}
-        <div className="flex gap-3">
-          <Button
-            onClick={onLeaderboard}
-            size="lg"
-            variant="outline"
-            className="flex-1 rounded-full"
-          >
-            <Trophy className="mr-2 h-5 w-5" />
-            {t('ui', 'leaderboard', language)}
-          </Button>
-          <Button
-            onClick={onNext}
-            size="lg"
-            className={cn(
-              "flex-1 rounded-full",
-              "bg-gradient-to-r from-primary to-secondary",
-              "hover:scale-105 transition-all duration-300"
-            )}
-          >
-            {t('ui', 'nextLevel', language)}
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        </div>
+        {/* Next level button */}
+        <Button
+          onClick={onNext}
+          size="lg"
+          className={cn(
+            "w-full rounded-full text-lg",
+            "bg-gradient-to-r from-primary to-secondary",
+            "hover:scale-105 transition-all duration-300"
+          )}
+        >
+          {t('ui', 'nextLevel', language)}
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </Button>
       </div>
     </div>
   );

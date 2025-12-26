@@ -1,6 +1,6 @@
 import { Language, t, translations } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
-import { Twitter, Facebook, Link, Check, Home, Share2 } from 'lucide-react';
+import { Twitter, Facebook, Link, Check, Home, Share2, Trophy } from 'lucide-react';
 import { useState } from 'react';
 import { formatTime } from './Timer';
 import { cn } from '@/lib/utils';
@@ -37,10 +37,11 @@ interface AchievementScreenProps {
   totalTimeMs: number;
   language: Language;
   onMenu: () => void;
+  onLeaderboard: () => void;
   playerRank: number | null;
 }
 
-export function AchievementScreen({ name, level, totalTimeMs, language, onMenu, playerRank }: AchievementScreenProps) {
+export function AchievementScreen({ name, level, totalTimeMs, language, onMenu, onLeaderboard, playerRank }: AchievementScreenProps) {
   const [copied, setCopied] = useState(false);
 
   // Get rank title based on level
@@ -230,16 +231,26 @@ export function AchievementScreen({ name, level, totalTimeMs, language, onMenu, 
           </Button>
         </div>
 
-        {/* Menu button */}
-        <Button
-          onClick={onMenu}
-          variant="ghost"
-          size="default"
-          className="w-full rounded-full h-9 sm:h-10 text-sm"
-        >
-          <Home className="mr-1.5 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-          {t('ui', 'menu', language)}
-        </Button>
+        {/* Action buttons */}
+        <div className="flex gap-3">
+          <Button
+            onClick={onLeaderboard}
+            variant="outline"
+            size="default"
+            className="flex-1 rounded-full h-9 sm:h-10 text-sm"
+          >
+            <Trophy className="mr-1.5 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            {t('ui', 'leaderboard', language)}
+          </Button>
+          <Button
+            onClick={onMenu}
+            size="default"
+            className="flex-1 rounded-full h-9 sm:h-10 text-sm bg-accent hover:bg-accent/90"
+          >
+            <Home className="mr-1.5 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            {t('ui', 'menu', language)}
+          </Button>
+        </div>
       </div>
     </div>
   );
