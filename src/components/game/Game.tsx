@@ -321,6 +321,7 @@ export function Game() {
             level={state.currentLevel}
             language={language}
             onNext={nextLevel}
+            onLeaderboard={handleOpenLeaderboard}
           />
         </>
       )}
