@@ -239,6 +239,7 @@ export function Game() {
         totalTimeMs={achievementData.totalTimeMs}
         language={language}
         onMenu={handleAchievementClose}
+        onLeaderboard={handleOpenLeaderboard}
         playerRank={playerRank}
       />
     );
@@ -321,7 +322,6 @@ export function Game() {
             level={state.currentLevel}
             language={language}
             onNext={nextLevel}
-            onLeaderboard={handleOpenLeaderboard}
           />
         </>
       )}
