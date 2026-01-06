@@ -5,8 +5,6 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  // For GitHub Pages deployment to /spot-the-chameleon/
-  base: mode === "production" ? "/spot-the-chameleon/" : "/",
   server: {
     host: "::",
     port: 8080,
