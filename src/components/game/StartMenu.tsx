@@ -50,7 +50,7 @@ export function StartMenu({
   return (
     <div className="min-h-screen gradient-bg flex flex-col items-center justify-center p-4">
       {/* Language toggle */}
-      <div className="absolute top-4 right-4">
+      <div className="absolute top-4 right-4 z-50">
         <LanguageToggle language={language} onToggle={onToggleLanguage} />
       </div>
 
